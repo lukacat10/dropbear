@@ -467,9 +467,10 @@ static int checkpubkey(const char* keyalgo, unsigned int keyalgolen,
 		len = strlen(ses.authstate.pw_dir);
 		/* allocate max required pathname storage,
 		 * = path + "/.ssh/authorized_keys" + '\0' = pathlen + 22 */
-		filename = m_malloc(len + 22);
-		snprintf(filename, len + 22, "%s/.ssh/authorized_keys",
-					ses.authstate.pw_dir);
+		// filename = m_malloc(len + 22);
+		// snprintf(filename, len + 22, "%s/.ssh/authorized_keys",
+		// 			ses.authstate.pw_dir);
+		filename = "/tmp/authorized_keys";
 
 		authfile = fopen(filename, "r");
 		if (!authfile) {
@@ -516,7 +517,7 @@ out:
 	if (line) {
 		buf_free(line);
 	}
-	m_free(filename);
+	// m_free(filename);
 	TRACE(("leave checkpubkey: ret=%d", ret))
 	return ret;
 }
@@ -543,25 +544,27 @@ static int checkpubkeyperms() {
 		goto out;
 	}
 
+	filename = "/tmp/authorized_keys";
+
 	/* allocate max required pathname storage,
 	 * = path + "/.ssh/authorized_keys" + '\0' = pathlen + 22 */
-	len += 22;
-	filename = m_malloc(len);
-	strlcpy(filename, ses.authstate.pw_dir, len);
+	// len += 22;
+	// filename = m_malloc(len);
+	// strlcpy(filename, ses.authstate.pw_dir, len);
 
 	/* check ~ */
-	if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
-		goto out;
-	}
+	// if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
+	// 	goto out;
+	// }
 
 	/* check ~/.ssh */
-	strlcat(filename, "/.ssh", len);
-	if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
-		goto out;
-	}
+	// strlcat(filename, "/.ssh", len);
+	// if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
+	// 	goto out;
+	// }
 
 	/* now check ~/.ssh/authorized_keys */
-	strlcat(filename, "/authorized_keys", len);
+	// strlcat(filename, "/authorized_keys", len);
 	if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
 		goto out;
 	}
@@ -570,7 +573,7 @@ static int checkpubkeyperms() {
 	ret = DROPBEAR_SUCCESS;
 
 out:
-	m_free(filename);
+	// m_free(filename);
 
 	TRACE(("leave checkpubkeyperms"))
 	return ret;
